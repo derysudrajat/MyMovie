@@ -8,8 +8,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 public class MovieDetail extends AppCompatActivity {
-    ImageView imgPoster;
-    TextView tvTitle, tvYear, tv_release, tvRuntime, tvGenre, tvCast, tvOverview;
+    private ImageView imgPoster;
+    private TextView tvTitle;
+    private TextView tvYear;
+    private TextView tv_release;
+    private TextView tvRuntime;
+    private TextView tvGenre;
+    private TextView tvCast;
+    private TextView tvOverview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

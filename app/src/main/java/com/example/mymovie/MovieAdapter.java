@@ -12,8 +12,8 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
-public class MovieAdapter extends BaseAdapter {
-    private Context context;
+class MovieAdapter extends BaseAdapter {
+    private final Context context;
     private ArrayList<Movie> movies;
 
     public MovieAdapter(Context context) {
@@ -53,17 +53,17 @@ public class MovieAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        private TextView txtTitle;
-        private TextView txtDesc;
-        private ImageView imgPoster;
+        private final TextView txtTitle;
+        private final TextView txtDesc;
+        private final ImageView imgPoster;
 
-        public ViewHolder(View convertView) {
+        ViewHolder(View convertView) {
             txtTitle = convertView.findViewById(R.id.txt_title);
             txtDesc = convertView.findViewById(R.id.txt_description);
             imgPoster = convertView.findViewById(R.id.img_poster);
         }
 
-        public void bind(Movie movie) {
+        void bind(Movie movie) {
             txtTitle.setText(movie.getTitle());
             txtDesc.setText(movie.getOverview());
             Glide.with(context).load(movie.getPoster()).into(imgPoster);

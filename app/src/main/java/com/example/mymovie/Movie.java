@@ -105,7 +105,7 @@ public class Movie implements Parcelable {
         dest.writeString(this.overview);
     }
 
-    protected Movie(Parcel in) {
+    private Movie(Parcel in) {
         this.poster = in.readInt();
         this.title = in.readString();
         this.year = in.readString();
