@@ -4,14 +4,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Movie implements Parcelable {
-    private int poster;
-    private String title;
-    private String year;
-    private String releaseInfo;
-    private String runtime;
-    private String genre;
-    private String cast;
-    private String overview;
+    private final int poster;
+    private final String title;
+    private final String year;
+    private final String releaseInfo;
+    private final String runtime;
+    private final String genre;
+    private final String cast;
+    private final String overview;
 
     public Movie(int poster, String title, String year, String releaseInfo, String runtime, String genre, String cast, String overview) {
         this.poster = poster;
@@ -28,64 +28,32 @@ public class Movie implements Parcelable {
         return poster;
     }
 
-    public void setPoster(int poster) {
-        this.poster = poster;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getYear() {
         return year;
     }
 
-    public void setYear(String year) {
-        this.year = year;
-    }
-
     public String getReleaseInfo() {
         return releaseInfo;
-    }
-
-    public void setReleaseInfo(String releaseInfo) {
-        this.releaseInfo = releaseInfo;
     }
 
     public String getRuntime() {
         return runtime;
     }
 
-    public void setRuntime(String runtime) {
-        this.runtime = runtime;
-    }
-
     public String getGenre() {
         return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
     }
 
     public String getCast() {
         return cast;
     }
 
-    public void setCast(String cast) {
-        this.cast = cast;
-    }
-
     public String getOverview() {
         return overview;
-    }
-
-    public void setOverview(String overview) {
-        this.overview = overview;
     }
 
     @Override
