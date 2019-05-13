@@ -2,6 +2,7 @@ package com.example.mymovie;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,12 +17,29 @@ public class MovieDetail extends AppCompatActivity {
     private TextView tvGenre;
     private TextView tvCast;
     private TextView tvOverview;
+    private TextView tvDateCertification;
+    private TvShow tvShow;
+    private Movie movie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
-        Movie movie = getIntent().getParcelableExtra(MainActivity.MOVIE_EXTRA);
+        prepare();
+        try {
+            tvShow = getIntent().getParcelableExtra(TvShowFragment.TV_SHOW_EXTRA);
+            movie = getIntent().getParcelableExtra(MoviesFragment.MOVIE_EXTRA);
+            if (getIntent().getParcelableExtra(MoviesFragment.MOVIE_EXTRA) != null ) {
+                setDataFromMovies();
+            }else if (getIntent().getParcelableExtra(TvShowFragment.TV_SHOW_EXTRA)!=null){
+                setDataFromTvShow();
+            }
+        }catch (Exception e){
+            Log.d("MovieDetail","Ex: "+e);
+        }
+
+    }
+    private void prepare(){
         imgPoster = findViewById(R.id.iv_poster);
         tvTitle = findViewById(R.id.tv_title);
         tvYear = findViewById(R.id.tv_year);
@@ -30,7 +48,9 @@ public class MovieDetail extends AppCompatActivity {
         tvGenre = findViewById(R.id.tv_genre);
         tvCast = findViewById(R.id.tv_cast);
         tvOverview = findViewById(R.id.tv_description);
-
+        tvDateCertification = findViewById(R.id.rel_cer_info);
+    }
+    private void setDataFromMovies(){
         setTitle(movie.getTitle());
         Glide.with(this).load(movie.getPoster()).into(imgPoster);
         tvTitle.setText(movie.getTitle());
@@ -40,5 +60,17 @@ public class MovieDetail extends AppCompatActivity {
         tvGenre.setText(movie.getGenre());
         tvCast.setText(movie.getCast());
         tvOverview.setText(movie.getOverview());
+    }
+    private void setDataFromTvShow(){
+        setTitle(tvShow.getTitle());
+        tvDateCertification.setText(getResources().getText(R.string.certification));
+        Glide.with(this).load(tvShow.getPoster()).into(imgPoster);
+        tvTitle.setText(tvShow.getTitle());
+        tvYear.setText(tvShow.getYear());
+        tv_release.setText(tvShow.getCertification());
+        tvRuntime.setText(tvShow.getRuntime());
+        tvGenre.setText(tvShow.getGenre());
+        tvCast.setText(tvShow.getCast());
+        tvOverview.setText(tvShow.getOverview());
     }
 }
