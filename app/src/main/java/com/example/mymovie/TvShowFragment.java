@@ -1,15 +1,20 @@
 package com.example.mymovie;
 
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
@@ -18,59 +23,74 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 public class TvShowFragment extends Fragment {
-    private String[] dataTitle;
-    private String[] dataYear;
-    private String[] dataCertification;
-    private String[] dataRuntime;
-    private String[] dataGenre;
-    private String[] dataCast;
-    private String[] dataOverview;
-    private TypedArray dataPoster;
-    private TvShowAdapter adapter;
-    public static final String TV_SHOW_EXTRA = "tv_show_extra";
 
+    private TvShowAdapter adapter;
+    private ProgressBar progressBar;
+    private MainViewModel mainViewModel;
+    public static final String TV_SHOW_EXTRA = "tv_show_extra";
+    public static final String TV_SHOW_KEY = "tv";
+    public String Language, Hours, Munites, As;
+    String[] AdditionalState= new String[4];
 
     public TvShowFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.list_item, container, false);
-        RecyclerView rvTvShow = rootView.findViewById(R.id.mainRv);
-        rvTvShow.setHasFixedSize(true);
-        rvTvShow.setLayoutManager(new LinearLayoutManager(getActivity()));
+        progressBar = rootView.findViewById(R.id.progressBar);
+
+        Language = getResources().getString(R.string.lang);
+        Hours = getResources().getString(R.string.hours);
+        Munites = getResources().getString(R.string.munites);
+        As = getResources().getString(R.string.as);
+        AdditionalState[0] = Language;
+        AdditionalState[1] = As;
+        AdditionalState[2] = Hours;
+        AdditionalState[3] = Munites;
+
+        mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        mainViewModel.getTvShow().observe(getActivity(),getTvShow);
+
         adapter = new TvShowAdapter(getActivity());
-        prepare();
-        addItem();
+        adapter.notifyDataSetChanged();
+
+        RecyclerView rvTvShow = rootView.findViewById(R.id.mainRv);
+        rvTvShow.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvTvShow.setAdapter(adapter);
+
+        showData();
+
         return rootView;
     }
 
-    private void addItem() {
-        ArrayList<TvShow> tvShows = new ArrayList<>();
-        for (int i = 0; i < dataTitle.length; i++) {
-            TvShow tvShow = new TvShow(
-                    dataPoster.getResourceId(i, -1),
-                    dataTitle[i], dataYear[i], dataCertification[i],
-                    dataRuntime[i], dataGenre[i], dataCast[i],
-                    dataOverview[i]);
-            tvShows.add(tvShow);
+    private Observer<ArrayList<TvShow>> getTvShow = new Observer<ArrayList<TvShow>>() {
+        @Override
+        public void onChanged(@Nullable ArrayList<TvShow> tvShowItems) {
+            if (tvShowItems!=null){
+                adapter.setmData(tvShowItems);
+                showLoading(false);
+            }
         }
-        adapter.setListTvShow(tvShows);
+    };
+
+    private void showData(){
+        mainViewModel.setData(TV_SHOW_KEY, AdditionalState);
+        showLoading(true);
     }
 
-    private void prepare() {
-        dataTitle = getResources().getStringArray(R.array.tv_tittle);
-        dataYear = getResources().getStringArray(R.array.tv_year);
-        dataCertification = getResources().getStringArray(R.array.certification);
-        dataRuntime = getResources().getStringArray(R.array.tv_runtime);
-        dataGenre = getResources().getStringArray(R.array.tv_genre);
-        dataCast = getResources().getStringArray(R.array.tv_cast);
-        dataOverview = getResources().getStringArray(R.array.tv_overview);
-        dataPoster = getResources().obtainTypedArray(R.array.tv_poster);
+
+    private void showLoading(Boolean state) {
+        if (state) {
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+        }
     }
+
+
+
 
 }
