@@ -28,11 +28,8 @@ public class MoviesFragment extends Fragment{
     private MainViewModel mainViewModel;
     public static final String MOVIE_EXTRA = "movie_extra";
     public static final String MOVIE_KEY = "movie";
-    private String Language;
-    private String Hours;
-    private String Munites;
-    private String As;
-    private final String[] AdditionalState = new String[4];
+    public String Language, Hours, Munites, As;
+    String[] AdditionalState = new String[4];
 
     public MoviesFragment() {
         // Required empty public constructor
@@ -68,7 +65,7 @@ public class MoviesFragment extends Fragment{
 
     }
 
-    private final Observer<ArrayList<Movie>> getMovie = new Observer<ArrayList<Movie>>() {
+    private  Observer<ArrayList<Movie>> getMovie = new Observer<ArrayList<Movie>>() {
         @Override
         public void onChanged(@Nullable ArrayList<Movie> movieItems) {
             if (movieItems!=null){

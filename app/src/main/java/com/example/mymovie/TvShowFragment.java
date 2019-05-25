@@ -27,12 +27,9 @@ public class TvShowFragment extends Fragment {
     private ProgressBar progressBar;
     private MainViewModel mainViewModel;
     public static final String TV_SHOW_EXTRA = "tv_show_extra";
-    private static final String TV_SHOW_KEY = "tv";
-    private String Language;
-    private String Hours;
-    private String Munites;
-    private String As;
-    private final String[] AdditionalState= new String[4];
+    public static final String TV_SHOW_KEY = "tv";
+    public String Language, Hours, Munites, As;
+    String[] AdditionalState= new String[4];
 
     public TvShowFragment() {
         // Required empty public constructor
@@ -68,7 +65,7 @@ public class TvShowFragment extends Fragment {
         return rootView;
     }
 
-    private final Observer<ArrayList<TvShow>> getTvShow = new Observer<ArrayList<TvShow>>() {
+    private Observer<ArrayList<TvShow>> getTvShow = new Observer<ArrayList<TvShow>>() {
         @Override
         public void onChanged(@Nullable ArrayList<TvShow> tvShowItems) {
             if (tvShowItems!=null){
@@ -91,8 +88,5 @@ public class TvShowFragment extends Fragment {
             progressBar.setVisibility(View.GONE);
         }
     }
-
-
-
 
 }

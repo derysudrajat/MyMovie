@@ -21,7 +21,6 @@ public class Movie implements Parcelable {
     private String cast;
     private String overview;
 
-
     @SuppressLint("SimpleDateFormat")
     public Movie(JSONObject object, String castList, String[] Astate) {
         try {
@@ -47,13 +46,15 @@ public class Movie implements Parcelable {
                     int hh = runtime / 60;
                     int mm = runtime % 60;
                     if (runtime > 60) {
-                        mRuntime = String.valueOf(hh) +
-                                Astate[2] +
-                                mm +
-                                Astate[3];
+                        mRuntime = new StringBuilder()
+                                .append(hh)
+                                .append(Astate[2])
+                                .append(mm)
+                                .append(Astate[3]).toString();
                     } else {
-                        mRuntime = String.valueOf(mm) +
-                                Astate[3];
+                        mRuntime = new StringBuilder()
+                                .append(mm)
+                                .append(Astate[3]).toString();
                     }
                 } else {
                     mRuntime = "Unknown";
