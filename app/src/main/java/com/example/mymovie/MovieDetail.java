@@ -3,7 +3,9 @@ package com.example.mymovie;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -19,12 +21,14 @@ public class MovieDetail extends AppCompatActivity {
     private TextView tvOverview;
     private TextView tvDateCertification;
     private TvShow tvShow;
+    private ProgressBar progressBar;
     private Movie movie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
+        progressBar = findViewById(R.id.detail_progressBar);
         prepare();
         try {
             tvShow = getIntent().getParcelableExtra(TvShowFragment.TV_SHOW_EXTRA);
@@ -40,6 +44,7 @@ public class MovieDetail extends AppCompatActivity {
 
     }
     private void prepare(){
+        showLoading(true);
         imgPoster = findViewById(R.id.iv_poster);
         tvTitle = findViewById(R.id.tv_title);
         tvYear = findViewById(R.id.tv_year);
@@ -60,10 +65,10 @@ public class MovieDetail extends AppCompatActivity {
         tvGenre.setText(movie.getGenre());
         tvCast.setText(movie.getCast());
         tvOverview.setText(movie.getOverview());
+        showLoading(false);
     }
     private void setDataFromTvShow(){
         setTitle(tvShow.getTitle());
-        tvDateCertification.setText(getResources().getText(R.string.certification));
         Glide.with(this).load(tvShow.getPoster()).into(imgPoster);
         tvTitle.setText(tvShow.getTitle());
         tvYear.setText(tvShow.getYear());
@@ -72,5 +77,13 @@ public class MovieDetail extends AppCompatActivity {
         tvGenre.setText(tvShow.getGenre());
         tvCast.setText(tvShow.getCast());
         tvOverview.setText(tvShow.getOverview());
+        showLoading(false);
+    }
+    private void showLoading(Boolean state) {
+        if (state) {
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+        }
     }
 }
