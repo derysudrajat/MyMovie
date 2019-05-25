@@ -18,33 +18,33 @@ import java.util.ArrayList;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
     private final Context context;
-    private ArrayList<Movie> listMovie;
+    private ArrayList<Movie> mData = new ArrayList<>();
 
     public MoviesAdapter(Context context) {
         this.context = context;
     }
 
-    private ArrayList<Movie> getListMovie() {
-        return listMovie;
-    }
-
-    public void setListMovie(ArrayList<Movie> listMovie) {
-        this.listMovie = listMovie;
+    public void setmData(ArrayList<Movie> items) {
+        mData.clear();
+        mData.addAll(items);
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public MoviesViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_film,viewGroup,false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_film, viewGroup, false);
         return new MoviesViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MoviesViewHolder holder, int i) {
-        final Movie movie = getListMovie().get(i);
+        final Movie movie = mData.get(i);
         holder.txtTitle.setText(movie.getTitle());
         holder.txtDesc.setText(movie.getOverview());
-        Glide.with(context).load(movie.getPoster()).into(holder.imgPoster);
+        Glide.with(context)
+                .load(movie.getPoster())
+                .into(holder.imgPoster);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,7 +63,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
     @Override
     public int getItemCount() {
-        return getListMovie().size();
+        return mData.size();
     }
 
 

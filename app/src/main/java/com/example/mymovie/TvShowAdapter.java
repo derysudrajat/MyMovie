@@ -18,18 +18,16 @@ import java.util.ArrayList;
 
 public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvViewHolder> {
     private final Context context;
-    private ArrayList<TvShow> listTvShow;
+    private ArrayList<TvShow> mData =new ArrayList<>();
 
     public TvShowAdapter(Context context) {
         this.context = context;
     }
 
-    private ArrayList<TvShow> getListTvShow() {
-        return listTvShow;
-    }
-
-    public void setListTvShow(ArrayList<TvShow> listTvShow) {
-        this.listTvShow = listTvShow;
+    public void setmData(ArrayList<TvShow> items) {
+        mData.clear();
+        mData.addAll(items);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -41,10 +39,12 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvViewHold
 
     @Override
     public void onBindViewHolder(@NonNull TvViewHolder holder, int i) {
-        final TvShow tvShow = getListTvShow().get(i);
+        final TvShow tvShow = mData.get(i);
         holder.txtTitle.setText(tvShow.getTitle());
         holder.txtDesc.setText(tvShow.getOverview());
-        Glide.with(context).load(tvShow.getPoster()).into(holder.imgPoster);
+        Glide.with(context)
+                .load(tvShow.getPoster())
+                .into(holder.imgPoster);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +64,7 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvViewHold
 
     @Override
     public int getItemCount() {
-        return getListTvShow().size();
+        return mData.size();
     }
 
     public class TvViewHolder extends RecyclerView.ViewHolder {
