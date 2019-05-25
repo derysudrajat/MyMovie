@@ -1,30 +1,89 @@
 package com.example.mymovie;
 
+import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class TvShow implements Parcelable {
-    private final int poster;
-    private final String title;
-    private final String year;
-    private final String certification;
-    private final String runtime;
-    private final String genre;
-    private final String cast;
-    private final String overview;
+    private String poster;
+    private String title;
+    private String year;
+    private String runtime;
+    private String certification;
+    private String genre;
+    private String cast;
+    private String overview;
 
-    public TvShow(int poster, String title, String year, String certification, String runtime, String genre, String cast, String overview) {
-        this.poster = poster;
-        this.title = title;
-        this.year = year;
-        this.certification = certification;
-        this.runtime = runtime;
-        this.genre = genre;
-        this.cast = cast;
-        this.overview = overview;
+    @SuppressLint("SimpleDateFormat")
+    public TvShow(JSONObject object, String castList, String[] AState) {
+        try {
+            String mTitle = (object.getString("name") != null) ? object.getString("name") : "-";
+            String mReleaseDate = (object.getString("first_air_date") != null) ? object.getString("first_air_date") : "-";
+            String mYear = (mReleaseDate.split("-")[0] != null) ? mReleaseDate.split("-")[0] : "Unknown";
+            String mPoster = "https://image.tmdb.org/t/p/w342" + object.getString("poster_path");
+            String mOverview = (object.getString("overview") != null) ? object.getString("overview") : "-";
+
+            StringBuilder mGenre = new StringBuilder();
+            JSONArray genList = object.getJSONArray("genres");
+            for (int i = 0; i < genList.length(); i++) {
+                if (i == genList.length() - 1) {
+                    mGenre.append(genList.getJSONObject(i).getString("name"));
+                } else {
+                    mGenre.append(genList.getJSONObject(i).getString("name")).append(", ");
+                }
+            }
+            String mRuntime = "";
+            try {
+                if (object.getJSONArray("episode_run_time").getInt(0) != 0) {
+                    int runtime = object.getJSONArray("episode_run_time").getInt(0);
+                    int hh = runtime / 60;
+                    int mm = runtime % 60;
+                    if (runtime > 60) {
+                        mRuntime = new StringBuilder()
+                                .append(hh)
+                                .append(AState[2])
+                                .append(mm)
+                                .append(AState[3]).toString();
+                    } else {
+                        mRuntime = new StringBuilder()
+                                .append(mm)
+                                .append(AState[3])
+                                .toString();
+                    }
+                } else {
+                    mRuntime = "-";
+                }
+            } catch (Exception e) {
+                Log.d("TVSHOW", "Runtime: " + mRuntime);
+            }
+
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date mDate = formatter.parse(mReleaseDate);
+            formatter = new SimpleDateFormat("dd MMM yyyy");
+            String strDate = formatter.format(mDate);
+
+            this.title = mTitle;
+            this.overview = mOverview;
+            this.certification = strDate;
+            this.year = mYear;
+            this.poster = mPoster;
+            this.runtime = mRuntime;
+            this.cast = castList;
+            this.genre = mGenre.toString();
+        } catch (Exception e) {
+            Log.d("TcShow","Constructor: "+e.getMessage());
+        }
+
     }
 
-    public int getPoster() {
+    public String getPoster() {
         return poster;
     }
 
@@ -63,7 +122,7 @@ public class TvShow implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.poster);
+        dest.writeString(this.poster);
         dest.writeString(this.title);
         dest.writeString(this.year);
         dest.writeString(this.certification);
@@ -74,7 +133,7 @@ public class TvShow implements Parcelable {
     }
 
     private TvShow(Parcel in) {
-        this.poster = in.readInt();
+        this.poster = in.readString();
         this.title = in.readString();
         this.year = in.readString();
         this.certification = in.readString();
