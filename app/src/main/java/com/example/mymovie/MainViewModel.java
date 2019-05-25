@@ -16,15 +16,15 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-public class MainViewModel extends ViewModel {
+class MainViewModel extends ViewModel {
     private static final String API_KEY = "0a597bad68c0b95d5fab612cff9d8891";
-    AsyncHttpClient client = new AsyncHttpClient();
+    private final AsyncHttpClient client = new AsyncHttpClient();
     // Data Movie
-    private MutableLiveData<ArrayList<Movie>> listMovie = new MutableLiveData<>();
-    final ArrayList<Movie> listItemsMovie = new ArrayList<>();
+    private final MutableLiveData<ArrayList<Movie>> listMovie = new MutableLiveData<>();
+    private final ArrayList<Movie> listItemsMovie = new ArrayList<>();
     // Data Tv Show
-    private MutableLiveData<ArrayList<TvShow>> listTv = new MutableLiveData<>();
-    final ArrayList<TvShow> listItemsTv = new ArrayList<>();
+    private final MutableLiveData<ArrayList<TvShow>> listTv = new MutableLiveData<>();
+    private final ArrayList<TvShow> listItemsTv = new ArrayList<>();
 
     LiveData<ArrayList<Movie>> getMovies() {
         return listMovie;
@@ -35,13 +35,12 @@ public class MainViewModel extends ViewModel {
     }
 
     void setData(final String mKey, final String[] AState) {
-        String url = new StringBuilder()
-                .append("https://api.themoviedb.org/3/discover/")
-                .append(mKey)
-                .append("?api_key=")
-                .append(API_KEY)
-                .append("&language=")
-                .append(AState[0]).toString();
+        String url = "https://api.themoviedb.org/3/discover/" +
+                mKey +
+                "?api_key=" +
+                API_KEY +
+                "&language=" +
+                AState[0];
         client.get(url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -66,14 +65,13 @@ public class MainViewModel extends ViewModel {
         });
     }
 
-    void getDataCast(final String id, final JSONArray list, final String mKey, final String[] AState) {
-        String url = new StringBuilder()
-                .append("https://api.themoviedb.org/3/")
-                .append(mKey)
-                .append("/")
-                .append(id)
-                .append("/credits?api_key=")
-                .append(API_KEY).toString();
+    private void getDataCast(final String id, final JSONArray list, final String mKey, final String[] AState) {
+        String url = "https://api.themoviedb.org/3/" +
+                mKey +
+                "/" +
+                id +
+                "/credits?api_key=" +
+                API_KEY;
         client.get(url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -86,20 +84,17 @@ public class MainViewModel extends ViewModel {
                         String name = castList.getJSONObject(i).getString("name");
                         String chara = castList.getJSONObject(i).getString("character");
                         cast.append((chara != null) ?
-                                new StringBuilder()
-                                        .append(name)
-                                        .append(" ")
-                                        .append(AState[1])
-                                        .append(" ")
-                                        .append(chara)
-                                        .append("\n")
-                                        .toString() :
-                                new StringBuilder()
-                                        .append(name)
-                                        .append(" ")
-                                        .append(AState[1])
-                                        .append(" -")
-                                        .append("\n").toString());
+                                name +
+                                        " " +
+                                        AState[1] +
+                                        " " +
+                                        chara +
+                                        "\n" :
+                                name +
+                                        " " +
+                                        AState[1] +
+                                        " -" +
+                                        "\n");
                     }
                     getDetailData(id, list, cast.toString(), mKey, AState);
 
@@ -115,16 +110,15 @@ public class MainViewModel extends ViewModel {
         });
     }
 
-    void getDetailData(final String id, final JSONArray list, final String mCast, final String mKey, final String[] ASate) {
-        String url = new StringBuilder()
-                .append("https://api.themoviedb.org/3/")
-                .append(mKey)
-                .append("/")
-                .append(id)
-                .append("?api_key=")
-                .append(API_KEY)
-                .append("&language=")
-                .append(ASate[0]).toString();
+    private void getDetailData(final String id, final JSONArray list, final String mCast, final String mKey, final String[] ASate) {
+        String url = "https://api.themoviedb.org/3/" +
+                mKey +
+                "/" +
+                id +
+                "?api_key=" +
+                API_KEY +
+                "&language=" +
+                ASate[0];
         client.get(url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

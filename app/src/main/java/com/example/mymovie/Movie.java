@@ -47,15 +47,13 @@ public class Movie implements Parcelable {
                     int hh = runtime / 60;
                     int mm = runtime % 60;
                     if (runtime > 60) {
-                        mRuntime = new StringBuilder()
-                                .append(hh)
-                                .append(Astate[2])
-                                .append(mm)
-                                .append(Astate[3]).toString();
+                        mRuntime = String.valueOf(hh) +
+                                Astate[2] +
+                                mm +
+                                Astate[3];
                     } else {
-                        mRuntime = new StringBuilder()
-                                .append(mm)
-                                .append(Astate[3]).toString();
+                        mRuntime = String.valueOf(mm) +
+                                Astate[3];
                     }
                 } else {
                     mRuntime = "Unknown";

@@ -19,7 +19,6 @@ public class MovieDetail extends AppCompatActivity {
     private TextView tvGenre;
     private TextView tvCast;
     private TextView tvOverview;
-    private TextView tvDateCertification;
     private TvShow tvShow;
     private ProgressBar progressBar;
     private Movie movie;
@@ -53,7 +52,7 @@ public class MovieDetail extends AppCompatActivity {
         tvGenre = findViewById(R.id.tv_genre);
         tvCast = findViewById(R.id.tv_cast);
         tvOverview = findViewById(R.id.tv_description);
-        tvDateCertification = findViewById(R.id.rel_cer_info);
+        TextView tvDateCertification = findViewById(R.id.rel_cer_info);
     }
     private void setDataFromMovies(){
         setTitle(movie.getTitle());

@@ -46,16 +46,13 @@ public class TvShow implements Parcelable {
                     int hh = runtime / 60;
                     int mm = runtime % 60;
                     if (runtime > 60) {
-                        mRuntime = new StringBuilder()
-                                .append(hh)
-                                .append(AState[2])
-                                .append(mm)
-                                .append(AState[3]).toString();
+                        mRuntime = String.valueOf(hh) +
+                                AState[2] +
+                                mm +
+                                AState[3];
                     } else {
-                        mRuntime = new StringBuilder()
-                                .append(mm)
-                                .append(AState[3])
-                                .toString();
+                        mRuntime = String.valueOf(mm) +
+                                AState[3];
                     }
                 } else {
                     mRuntime = "-";

@@ -3,20 +3,19 @@ package com.example.mymovie;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 /**
@@ -29,8 +28,11 @@ public class MoviesFragment extends Fragment{
     private MainViewModel mainViewModel;
     public static final String MOVIE_EXTRA = "movie_extra";
     public static final String MOVIE_KEY = "movie";
-    public String Language, Hours, Munites, As;
-    String[] AdditionalState = new String[4];
+    private String Language;
+    private String Hours;
+    private String Munites;
+    private String As;
+    private final String[] AdditionalState = new String[4];
 
     public MoviesFragment() {
         // Required empty public constructor
@@ -50,7 +52,7 @@ public class MoviesFragment extends Fragment{
         AdditionalState[1] = As;
         AdditionalState[2] = Hours;
         AdditionalState[3] = Munites;
-        mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        mainViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
         mainViewModel.getMovies().observe(getActivity(),getMovie);
 
         adapter = new MoviesAdapter(getActivity());
@@ -66,7 +68,7 @@ public class MoviesFragment extends Fragment{
 
     }
 
-    private  Observer<ArrayList<Movie>> getMovie = new Observer<ArrayList<Movie>>() {
+    private final Observer<ArrayList<Movie>> getMovie = new Observer<ArrayList<Movie>>() {
         @Override
         public void onChanged(@Nullable ArrayList<Movie> movieItems) {
             if (movieItems!=null){

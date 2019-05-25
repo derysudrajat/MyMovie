@@ -3,20 +3,19 @@ package com.example.mymovie;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 /**
@@ -28,9 +27,12 @@ public class TvShowFragment extends Fragment {
     private ProgressBar progressBar;
     private MainViewModel mainViewModel;
     public static final String TV_SHOW_EXTRA = "tv_show_extra";
-    public static final String TV_SHOW_KEY = "tv";
-    public String Language, Hours, Munites, As;
-    String[] AdditionalState= new String[4];
+    private static final String TV_SHOW_KEY = "tv";
+    private String Language;
+    private String Hours;
+    private String Munites;
+    private String As;
+    private final String[] AdditionalState= new String[4];
 
     public TvShowFragment() {
         // Required empty public constructor
@@ -51,7 +53,7 @@ public class TvShowFragment extends Fragment {
         AdditionalState[2] = Hours;
         AdditionalState[3] = Munites;
 
-        mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        mainViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
         mainViewModel.getTvShow().observe(getActivity(),getTvShow);
 
         adapter = new TvShowAdapter(getActivity());
@@ -66,7 +68,7 @@ public class TvShowFragment extends Fragment {
         return rootView;
     }
 
-    private Observer<ArrayList<TvShow>> getTvShow = new Observer<ArrayList<TvShow>>() {
+    private final Observer<ArrayList<TvShow>> getTvShow = new Observer<ArrayList<TvShow>>() {
         @Override
         public void onChanged(@Nullable ArrayList<TvShow> tvShowItems) {
             if (tvShowItems!=null){
