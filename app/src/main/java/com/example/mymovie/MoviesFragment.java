@@ -3,10 +3,13 @@ package com.example.mymovie;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,6 +31,9 @@ public class MoviesFragment extends Fragment{
     private MainViewModel mainViewModel;
     public static final String MOVIE_EXTRA = "movie_extra";
     public static final String MOVIE_KEY = "movie";
+    public static final String MOVIE_OUTSTATE = "movie_list";
+    RecyclerView rvMovies;
+    SwipeRefreshLayout refreshLayout;
     public String Language, Hours, Munites, As;
     String[] AdditionalState = new String[4];
 
@@ -41,6 +47,7 @@ public class MoviesFragment extends Fragment{
         View rootView = inflater.inflate(R.layout.list_item, container, false);
 
         progressBar = rootView.findViewById(R.id.progressBar);
+        refreshLayout = rootView.findViewById(R.id.swipe_refresh);
         Language = getResources().getString(R.string.lang);
         Hours = getResources().getString(R.string.hours);
         Munites = getResources().getString(R.string.munites);
@@ -49,15 +56,25 @@ public class MoviesFragment extends Fragment{
         AdditionalState[1] = As;
         AdditionalState[2] = Hours;
         AdditionalState[3] = Munites;
-        mainViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mainViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
+        }
         mainViewModel.getMovies().observe(getActivity(),getMovie);
 
         adapter = new MoviesAdapter(getActivity());
         adapter.notifyDataSetChanged();
 
-        RecyclerView rvMovies = rootView.findViewById(R.id.mainRv);
+        rvMovies = rootView.findViewById(R.id.mainRv);
         rvMovies.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvMovies.setAdapter(adapter);
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                showData();
+                refreshLayout.setRefreshing(false);
+            }
+        });
 
         showData();
 
@@ -88,6 +105,20 @@ public class MoviesFragment extends Fragment{
         }
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(MOVIE_OUTSTATE, new ArrayList<Parcelable>(adapter.getMovieList()));
+    }
 
-
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState!=null){
+            ArrayList<Movie> mList;
+            mList = savedInstanceState.getParcelableArrayList(MOVIE_OUTSTATE);
+            adapter.setmData(mList);
+            rvMovies.setAdapter(adapter);
+        }
+    }
 }
