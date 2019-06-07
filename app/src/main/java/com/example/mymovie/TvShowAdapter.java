@@ -30,6 +30,10 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvViewHold
         notifyDataSetChanged();
     }
 
+    public ArrayList<TvShow> getTvShowList(){
+        return mData;
+    }
+
     @NonNull
     @Override
     public TvViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -49,17 +53,11 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvViewHold
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, tvShow.getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        holder.btnMoreInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 Intent intent = new Intent(context, MovieDetail.class);
                 intent.putExtra(TvShowFragment.TV_SHOW_EXTRA, tvShow);
                 context.startActivity(intent);
             }
         });
-
     }
 
     @Override
@@ -71,14 +69,12 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvViewHold
         final TextView txtTitle;
         final TextView txtDesc;
         final ImageView imgPoster;
-        final Button btnMoreInfo;
 
         TvViewHolder(@NonNull View itemView) {
             super(itemView);
             txtTitle = itemView.findViewById(R.id.txt_title);
             txtDesc = itemView.findViewById(R.id.txt_description);
             imgPoster = itemView.findViewById(R.id.img_poster);
-            btnMoreInfo = itemView.findViewById(R.id.btn_more_info);
         }
     }
 }

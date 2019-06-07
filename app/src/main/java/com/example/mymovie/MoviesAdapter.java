@@ -30,6 +30,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         notifyDataSetChanged();
     }
 
+    public ArrayList<Movie> getMovieList(){
+        return mData;
+    }
+
     @NonNull
     @Override
     public MoviesViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -49,11 +53,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, movie.getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        holder.btnMoreInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 Intent intent = new Intent(context, MovieDetail.class);
                 intent.putExtra(MoviesFragment.MOVIE_EXTRA, movie);
                 context.startActivity(intent);
@@ -66,19 +65,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         return mData.size();
     }
 
-
     public class MoviesViewHolder extends RecyclerView.ViewHolder {
         final TextView txtTitle;
         final TextView txtDesc;
         final ImageView imgPoster;
-        final Button btnMoreInfo;
 
         MoviesViewHolder(@NonNull View itemView) {
             super(itemView);
             txtTitle = itemView.findViewById(R.id.txt_title);
             txtDesc = itemView.findViewById(R.id.txt_description);
             imgPoster = itemView.findViewById(R.id.img_poster);
-            btnMoreInfo = itemView.findViewById(R.id.btn_more_info);
         }
     }
 }
