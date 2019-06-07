@@ -54,8 +54,7 @@ public class TvShow implements Parcelable {
                     } else {
                         mRuntime = new StringBuilder()
                                 .append(mm)
-                                .append(AState[3])
-                                .toString();
+                                .append(AState[3]).toString();
                     }
                 } else {
                     mRuntime = "-";
@@ -80,8 +79,6 @@ public class TvShow implements Parcelable {
         } catch (Exception e) {
             Log.d("TcShow", "Constructor: " + e.getMessage());
         }
-
-
     }
 
     public String getPoster() {

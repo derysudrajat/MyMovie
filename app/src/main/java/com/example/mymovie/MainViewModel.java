@@ -30,7 +30,7 @@ public class MainViewModel extends ViewModel {
         return listMovie;
     }
 
-    LiveData<ArrayList<TvShow>> getTvShow(){
+    LiveData<ArrayList<TvShow>> getTvShow() {
         return listTv;
     }
 
@@ -82,24 +82,28 @@ public class MainViewModel extends ViewModel {
                     JSONObject responseObject = new JSONObject(result);
                     JSONArray castList = responseObject.getJSONArray("cast");
                     StringBuilder cast = new StringBuilder();
-                    for (int i = 0; i < 5; i++) {
-                        String name = castList.getJSONObject(i).getString("name");
-                        String chara = castList.getJSONObject(i).getString("character");
-                        cast.append((chara != null) ?
-                                new StringBuilder()
-                                        .append(name)
-                                        .append(" ")
-                                        .append(AState[1])
-                                        .append(" ")
-                                        .append(chara)
-                                        .append("\n")
-                                        .toString() :
-                                new StringBuilder()
-                                        .append(name)
-                                        .append(" ")
-                                        .append(AState[1])
-                                        .append(" -")
-                                        .append("\n").toString());
+                    if (castList.length()!=0){
+                        for (int i = 0; i < 5; i++) {
+                            String name = castList.getJSONObject(i).getString("name");
+                            String chara = castList.getJSONObject(i).getString("character");
+                            cast.append((chara != null) ?
+                                    new StringBuilder()
+                                            .append(name)
+                                            .append(" ")
+                                            .append(AState[1])
+                                            .append(" ")
+                                            .append(chara)
+                                            .append("\n")
+                                            .toString() :
+                                    new StringBuilder()
+                                            .append(name)
+                                            .append(" ")
+                                            .append(AState[1])
+                                            .append(" -")
+                                            .append("\n").toString());
+                        }
+                    }else{
+                        cast.append("-").toString();
                     }
                     getDetailData(id, list, cast.toString(), mKey, AState);
 
@@ -131,22 +135,18 @@ public class MainViewModel extends ViewModel {
                 try {
                     String result = new String(responseBody);
                     JSONObject responseObject = new JSONObject(result);
-                    if (mKey.equals(MoviesFragment.MOVIE_KEY)){
+                    if (mKey.equals(MoviesFragment.MOVIE_KEY)) {
                         //Movie Data Set
                         Movie movieItems = new Movie(responseObject, mCast, ASate);
                         listItemsMovie.add(movieItems);
-                        if (listItemsMovie.size() == list.length()) {
-                            listMovie.postValue(listItemsMovie);
-                        }
-                    }else{
+                        listMovie.postValue(listItemsMovie);
+                    } else {
                         //Tv Data Set
                         TvShow tvshowItems = new TvShow(responseObject, mCast, ASate);
                         listItemsTv.add(tvshowItems);
-                        if (listItemsTv.size()==list.length()){
-                            listTv.postValue(listItemsTv);
-                        }
-                    }
+                        listTv.postValue(listItemsTv);
 
+                    }
                 } catch (Exception e) {
                     Log.d("JSON Execption: ", e.getMessage());
                 }
