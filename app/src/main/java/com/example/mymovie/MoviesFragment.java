@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,6 @@ public class MoviesFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.list_item, container, false);
-
         progressBar = rootView.findViewById(R.id.progressBar);
         refreshLayout = rootView.findViewById(R.id.swipe_refresh);
         Language = getResources().getString(R.string.lang);
@@ -56,11 +56,21 @@ public class MoviesFragment extends Fragment{
         AdditionalState[1] = As;
         AdditionalState[2] = Hours;
         AdditionalState[3] = Munites;
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                adapter.clear();
+                showData();
+                refreshLayout.setRefreshing(false);
+            }
+        });
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mainViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
+            mainViewModel.getMovies().observe(Objects.requireNonNull(getActivity()),getMovie);
         }
-        mainViewModel.getMovies().observe(getActivity(),getMovie);
-
         adapter = new MoviesAdapter(getActivity());
         adapter.notifyDataSetChanged();
 
@@ -68,18 +78,18 @@ public class MoviesFragment extends Fragment{
         rvMovies.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvMovies.setAdapter(adapter);
 
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                showData();
-                refreshLayout.setRefreshing(false);
-            }
-        });
-
-        showData();
-
+        if (savedInstanceState!=null){
+            onActivityCreated(savedInstanceState);
+        }else{
+            showData();
+        }
         return rootView;
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("MovieFragement","OnResume");
     }
 
     private  Observer<ArrayList<Movie>> getMovie = new Observer<ArrayList<Movie>>() {
@@ -117,6 +127,7 @@ public class MoviesFragment extends Fragment{
         if (savedInstanceState!=null){
             ArrayList<Movie> mList;
             mList = savedInstanceState.getParcelableArrayList(MOVIE_OUTSTATE);
+            adapter.clear();
             adapter.setmData(mList);
             rvMovies.setAdapter(adapter);
         }

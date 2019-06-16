@@ -30,6 +30,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        int size = mData.size();
+        mData.clear();
+        notifyItemRangeRemoved(0, size);
+    }
+
     public ArrayList<Movie> getMovieList(){
         return mData;
     }

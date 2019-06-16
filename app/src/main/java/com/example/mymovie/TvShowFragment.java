@@ -57,30 +57,38 @@ public class TvShowFragment extends Fragment {
         AdditionalState[1] = As;
         AdditionalState[2] = Hours;
         AdditionalState[3] = Munites;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mainViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
-        }
-        mainViewModel.getTvShow().observe(getActivity(),getTvShow);
-
-        adapter = new TvShowAdapter(getActivity());
-        adapter.notifyDataSetChanged();
-
-        rvTvShow = rootView.findViewById(R.id.mainRv);
-        rvTvShow.setLayoutManager(new LinearLayoutManager(getActivity()));
-        rvTvShow.setAdapter(adapter);
-
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                showData();
-                refreshLayout.setRefreshing(false);
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                mainViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
             }
-        });
+            mainViewModel.getTvShow().observe(getActivity(),getTvShow);
 
-        showData();
-        Log.d("TVSHOWFRAG","onCreateView was Called");
+            adapter = new TvShowAdapter(getActivity());
+            adapter.notifyDataSetChanged();
 
+            rvTvShow = rootView.findViewById(R.id.mainRv);
+            rvTvShow.setLayoutManager(new LinearLayoutManager(getActivity()));
+            rvTvShow.setAdapter(adapter);
+
+            refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    adapter.clear();
+                    showData();
+                    refreshLayout.setRefreshing(false);
+                }
+            });
+
+            if (savedInstanceState!=null){
+                onActivityCreated(savedInstanceState);
+            }else{
+                showData();
+            }
+            Log.d("TVSHOWFRAG","onCreateView was Called");
+        }catch (Exception e){
+            Log.d("TVSHOW","Exception: "+e);
+
+        }
         return rootView;
 
     }
@@ -125,6 +133,7 @@ public class TvShowFragment extends Fragment {
             Log.d("TVSHOWFRAG","onACreated was Called");
             ArrayList<TvShow> mList;
             mList = savedInstanceState.getParcelableArrayList(TV_SHOW_OUTSTATE);
+            adapter.clear();
             adapter.setmData(mList);
             rvTvShow.setAdapter(adapter);
         }

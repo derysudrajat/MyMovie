@@ -29,6 +29,11 @@ public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.TvViewHold
         mData.addAll(items);
         notifyDataSetChanged();
     }
+    public void clear() {
+        int size = mData.size();
+        mData.clear();
+        notifyItemRangeRemoved(0, size);
+    }
 
     public ArrayList<TvShow> getTvShowList(){
         return mData;
